@@ -1,47 +1,75 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue.min.js"></script>
-	<script src=""https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axio.min.js></script>
+   <title></title>
+   <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" >
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 </head>
 <body>
-	<div class="countainer">
-		<div class="row">
-			<div class="col-sm-8 col-sm-offset-2">
-				<div class="panel panel-default">
-					<div class="panel-heading">Ejercicio simple validacion de vue</div>
-
-						<div class="panel-body" id="app">
-							<form method="post" action="/vuejs/form" class="form-horizontal" @submit.prevent="onSubmit">
-								{{csrf_field()}}
-								<div class="['form-group',allerros.name? 'has-error':]">
-									<label for="name" class="col-sm-4 control-label">Name</label>
-									<div class="col-sm-6">
-										<input id="name" name="name" value="" autofocus="autofocus" class="form-coontrol" type="text" v-model="form-name">
-										<span v-if="allerros.name" :class="['label label-danger']">@{{'El valor de name es requerido'}}></span>
-										<div class="['form-group', allerros.commets ? 'has-error':]">
-											<label for="commets" class="col-sm-4 control-label">Message</label>
-											<div class="col-sm-6">
-												<input id="commets" name="commets" class="form-coontrol" type="commets" v-model="form.commets">
-												<span v-if="allerros.commets" :class="['label label-danger']">@{{"El valor de commet es requerido"}}</span>
-											</div>
-										</div>
-
-									</div>
-								</div>
-								<span v-if="siccess" :class="['label label-succes']">Registro enviado correctamente</span>
-								<button type="submit" class="btn btn-primary">Send</button>
-							</form>
-							
-						</div>
-					
-				</div>
-				
-			</div>
-			
-		</div>
-	</div>
+<div class="container">
+   <div class="row">
+       <div class="col-sm-8 col-sm-offset-2">
+           <div class="panel panel-default">
+               <div class="panel-heading">Bienvenido a motor doble j</div>
+               <div class="panel-body" id="app">
+                       <form method="POST" action="/vuejs/form" class="form-horizontal" @submit.prevent="onSubmit" >
+                       {{ csrf_field() }}
+                           <div :class="['form-group', allerros.name ? 'has-error' : '']" >
+                               <label for="name" class="col-sm-4 control-label">Name</label>
+                               <div class="col-sm-6">
+                                   <input id="name" name="name" value=""  autofocus="autofocus" class="form-control" type="text" v-model="form.name">
+                                   <span v-if="allerros.name" :class="['label label-danger']">@{{ allerros.name[0] }}</span>
+                               </div>
+                           </div>
+                           <div :class="['form-group', allerros.comments ? 'has-error' : '']" >
+                               <label for="comments" class="col-sm-4 control-label">Message</label>
+                                   <div class="col-sm-6">
+                                       <input id="comments" name="comments" class="form-control" type="file" v-model="form.comments">
+                                       <span v-if="allerros.comments" :class="['label label-danger']">@{{ allerros.comments[0] }}</span>
+                                   </div>
+                               </div>
+                               <span v-if="success" :class="['label label-success']">Record submitted successfully!</span>
+                               <button type="submit" class="btn btn-primary">
+                                   Send
+                               </button>
+                       </form>
+               </div>
+           </div>
+       </div>
+   </div>
+</div>
+<script type="text/javascript">
+   const app = new Vue({
+       el: '#app',
+       data: {
+           form: {
+               name : '',
+               comments : '',
+           },
+           allerros: [],
+           success : false,    
+       },
+       methods : {
+           onSubmit() {
+               dataform = new FormData();
+               dataform.append('name', this.form.name);
+               dataform.append('comments', this.form.comments);
+               console.log(this.form.name);
+               axios.post('/vuevalidation/form', dataform).then( response => {
+                   console.log(response);
+                   this.allerros = [];
+                   this.form.name = '';
+                   this.form.comments = '';
+                   this.success = true;
+               } ).catch((error) => {
+                        this.allerros = error.response.data.errors;
+                        this.success = false;
+                   });
+           }
+       }
+   });
+</script>
 </body>
 </html>

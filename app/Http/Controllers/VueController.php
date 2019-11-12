@@ -14,6 +14,7 @@ class VueController extends Controller
     public function index()
     {
         return view('vuevalidation-form');
+
     }
 
     /**
@@ -35,10 +36,11 @@ class VueController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'=>'required',
-            'comments'=>'required'
-        ]);
-        return response()->json[('success'=>'Done!')]
+           'name' => 'required',
+           'comments' => 'required',
+           'names' => 'required'
+       ]);
+       return response()->json(['success'=>'Done!']);
     }
 
     /**

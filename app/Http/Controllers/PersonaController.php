@@ -41,7 +41,17 @@ class PersonaController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+           'nombre' => 'required',
+           'apellido' => 'required',
+           'cantidad_sol' => 'required',
+           'may_cant_ahorros' => 'required',
+           'referencias' => 'required',
+           'garantia' => 'required',
+           'email' => 'required',
 
+           
+       ]);
         if($request->hasFile('avatar')){
             $file=$request->file('avatar');
             $name=time().$file->getClientOriginalName();
